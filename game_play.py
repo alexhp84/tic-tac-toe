@@ -47,7 +47,7 @@ def computer_move(board):
 
     #this is to move randomly choosing a free square if there is no win or block
     free = [i for i in range(9) if board[i] not in [X, O]]
-    if free:א
+    if free:
         board[random.choice(free)] = O
         return
 
@@ -63,7 +63,7 @@ def play_mode():
     #defining play order
     if choice == "2":
         order = input(f"Hi {name}, do you want to go first (1) or should I (2)? ")
-        if not choice.isdigit():
+        if not order.isdigit():
             order = input(f"Hi {name}, do you want to go first (1) or should I (2)? ")
         return choice, order
 
@@ -77,14 +77,16 @@ def play_mode():
 #asking the current player for a move and is a valid digit
 def player_move(board, current_name, symbol):
     while True:
-        choice = input(f"{current_name}, please choose a square (1-9): ")
+        choice = input(f"{current_name}, please choose a square (1-9) or enter 0 to reset: ")
 
         if not choice.isdigit():
             print("Please enter a number.")
             continue
 
         choice = int(choice)
-        if choice < 1 or choice > 9:
+        if choice == 0:
+            return
+        elif choice < 1 or choice > 9:
             print("Number must be between 1 and 9.")
             continue
 
@@ -120,9 +122,14 @@ def switch_player(player1, current_name, player2):
 def replay_game():
     choice = input(f"{name} do you wish to play again? Y(es) ir N(o)?")
     if choice in ["Y","y", "Yes", "yes", "YES"]:
+        if not choice == str:
+            input(f"{name} do you wish to play again? Y(es) ir N(o)?")
         return True
     else:
         return False
+
+def restart_game():
+    play_game()
 
 #defining how the game if played using the above functions as a function
 def play_game():
@@ -174,13 +181,11 @@ def play_game():
         #switching players
         current_name = switch_player(player1, current_name, player2)
 
-#switching icons
+        # switching icons
         if current_icon == X:
-           current_icon = O
-           current_name = player1
+            current_icon = O
         else:
-           current_icon = X
-           current_name = player2
+            current_icon = X
 
 #telling python to play a game and ask for replay
 while True:
