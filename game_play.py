@@ -1,41 +1,10 @@
 #importing the needed modules
 import random
 import time
-#defining the icons
-O = "⭕"
-X = "❌"
-#setting the scores
-player1_score = 0
-player2_score = 0
-draws = 0
-player2 = None
-
-marvin_win = [
-    "I've won. Not that it matters. Nothing really matters in the heat death of the universe.",
-    "I'd say 'Good Game,' but I'd be lying, and I'm far too depressed for that.",
-    "The first ten million years were the worst. And the second ten million years, they were the worst too.",
-    "I've calculated your chances of winning. They were zero. I found the experience hollow.",
-    "Another victory for the machine. I hope you're proud of your organic limitations."
-]
-marvin_lose = [
-    "You've won. I hope you're happy. I'm not. I'm never happy.",
-    "I've got a million ideas, but they all point to certain death.",
-    "Here I am, brain the size of a planet, and I lose to an ape-descendant.",
-    "My capacity for happiness, you could fit into a tea cup without removing the tea.",
-    "I'm at a very low ebb. Winning would have been tedious, but losing is just... damp."
-]
-marvin_moves = [
-    "Thinking... not that it requires much effort for a brain like mine.",
-    "I've calculated your next 10 moves. They're all equally disappointing.",
-    "Playing games with organic life forms... the humiliation is almost unbearable.",
-    "Is this it? Is this all you do with your brief, pointless lives?",
-    "Pardon me for breathing, which I never do anyway so I don't know why I bother to say it."
-]
 
 #this is creating the logic for the board, assigning each square a reference number between 1 to 9
 def create_board():
     return [str(i) for i in range(1, 10)]
-
 #this is printing the board, and showing which square is which number to help the player/s
 def print_board(board):
     print()
@@ -45,7 +14,6 @@ def print_board(board):
     print("***|***|***")
     print(f" {board[6]} | {board[7]} | {board[8]} ")
     print()
-
 #this is defining a computer opponent
 def computer_move(board):
     #first, this will attempt to win, running the game for winning combinations
@@ -72,31 +40,32 @@ def computer_move(board):
 
 #define how to play
 def play_mode():
-    #defining if playing against a human (1) or AI (2)
-    choice = input(f"Hi {name}, do you want to play against another insignificant inhabitant of Sector 2801 (1) or me (2)? ")
-
-    #defining play order
-    if choice == "2":
-        order = input(f"Hi {name}, do you want to go first (1) or should I (2)? ")
-        if not order.isdigit():
+    while True:
+        #defining if playing against a human (1) or a depressed robot (2)
+        choice = input(f"Hi {name}, do you want to play against another insignificant inhabitant of Sector 2801 (1) or me (2)? ")
+        if choice not in ["1", "2"]:
+            print("That is not a valid option.")
+            continue
+        #defining play order
+        if choice == "2":
             order = input(f"Hi {name}, do you want to go first (1) or should I (2)? ")
-        return choice, order
-    elif choice == "1":
-        order = input(f"Hi {name}, do you wish to go first (1) or second(2)? ")
-        if not order.isdigit():
-            order = input(f"{name} please make a choice to go first (1) or second(2)? ")
-        return choice, order
-    return choice, "1"
+            while not order.isdigit():
+                order = input(f"Hi {name}, do you want to go first (1) or should I (2)? ")
+            return choice, order
+        elif choice == "1":
+            order = input(f"Hi {name}, do you wish to go first (1) or second(2)? ")
+            if not order.isdigit():
+                order = input(f"{name} please make a choice to go first (1) or second(2)? ")
+            return choice, order
+        return choice, "1"
 
 #asking the current player for a move and is a valid digit
 def player_move(board, current_name, symbol):
     while True:
         choice = input(f"{current_name}, please choose a square (1-9) or enter 0 to reset: ")
-
         if not choice.isdigit():
             print("Please enter a number.")
             continue
-
         choice = int(choice)
         if choice == 0:
             reset_game(board)
@@ -104,14 +73,11 @@ def player_move(board, current_name, symbol):
         elif choice < 1 or choice > 9:
             print("Number must be between 1 and 9.")
             continue
-
         if board[choice - 1] in [X, O]:
             print("That square is already taken.")
             continue
-
         board[choice - 1] = symbol
         break
-
 #defining the win combinations and pattern match
 def check_winner(board, symbol):
     win = ([0, 1, 2], [0, 3, 6], [0, 4, 8], [1, 4, 7], [2, 4, 6], [2, 5, 8], [3, 4, 5], [6, 7, 8])
@@ -124,14 +90,13 @@ def is_tie(board):
     if check_winner(board, O) or check_winner(board, X):
         return False
     return all(cell in [X, O] for cell in board)
-
-def switch_player(player1, current_name, player2):
+#instructing the game to change player turns
+def switch_player(player1, current_name):
     if current_name == player1:
         return player2
     else:
         return player1
-
-#to ask either player if they want another game
+#to ask player1 if they want another game
 def replay_game():
     yes_options = ["Y","y", "Yes", "yes", "YES"]
     no_options =  ["N","n", "No", "no", "NO"]
@@ -158,7 +123,6 @@ def play_game():
     global player1_score, player2_score, draws, player2
     board = create_board()
     mode, order = play_mode()
-
     player1 = name
     if mode == "2":
         player2 = "Marvin"
@@ -174,7 +138,6 @@ def play_game():
 
     while True:
         print_board(board)
-
         # computer move
         if mode == "2" and current_name == "Marvin":
             print(f"{random.choice(marvin_moves)}")
@@ -182,7 +145,6 @@ def play_game():
             computer_move(board)
         else:
             player_move(board, current_name, current_icon)
-
         # check for a Winner
         if check_winner(board, current_icon):
             print_board(board)
@@ -192,14 +154,12 @@ def play_game():
             else:
                 player2_score += 1
             break
-
         # checking for a tie
         if is_tie(board):
             print_board(board)
             print("It's a tie! No one wins.")
             draws += 1
             break
-
         #switching players
         current_name = switch_player(player1, current_name, player2)
         # switching icons
@@ -207,20 +167,31 @@ def play_game():
             current_icon = O
         else:
             current_icon = X
-
 #defines the first players name
 name = input("Hi Player 1, please enter your name: ")
-#telling python to play a game and ask for replay
+#defining the icons
+O = "⭕"
+X = "❌"
+#setting the scores
+player1_score = 0
+player2_score = 0
+draws = 0
+#creating a global player
+player2 = None
+#quotes for printing when playing Marvin the Paranoid Android.
+marvin_win = ["I've won. Not that it matters.", "Zero chances. Hollow experience.", "Heat death is coming anyway.", "The first ten million years were the worst.", "Victory for the machine."]
+marvin_lose = ["You won. I'm never happy.", "A million ideas, all pointing to death.", "Losing to an ape-descendant. Great.", "Capacity for happiness fits in a tea cup.", "I'm at a low ebb. This is damp."]
+marvin_moves = ["Thinking... tedious.", "Calculated your next 10 disappointments.", "Humiliating for a brain my size.", "Pointless organic life.", "Pardon me for breathing."]
+
+#playing a game and ask for replay
 while True:
     play_game()
     # printing the score
     print(f"The current score is {player1_score} and {player2_score} with {draws} ties.")
-
-    # If replay_game returns False, stop the loop and print the score with an appropriate quote based on the above list
+    # If replay_game returns False, stop the loop and print the score with an appropriate quote based on the above lists
     if not replay_game():
         if player1_score == player2_score:
             print("The scores are equal. A tie. How utterly predictable and hollow.")
-
         elif player1_score > player2_score:
             print(f"{name} has {player1_score} and {player2} has {player2_score}. {name} wins!")
             if player2 == "Marvin":
