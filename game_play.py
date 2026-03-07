@@ -1,19 +1,23 @@
-#importing the needed modules
+#importing the needed modules and UI file
 import random
 import time
+import sys
+import game_ui
 
 #this is creating the logic for the board, assigning each square a reference number between 1 to 9
 def create_board():
     return [str(i) for i in range(1, 10)]
-#this is printing the board, and showing which square is which number to help the player/s
-def print_board(board):
-    print()
-    print(f" {board[0]} | {board[1]} | {board[2]} ")
-    print("***|***|***")
-    print(f" {board[3]} | {board[4]} | {board[5]} ")
-    print("***|***|***")
-    print(f" {board[6]} | {board[7]} | {board[8]} ")
-    print()
+
+#this is printing the board, and showing which square is which number to help the player/s - for terminal only
+#def print_board(board):
+#    print(f" {board[0]} | {board[1]} | {board[2]} ")
+#   print()
+#   print("***|***|***")
+#   print(f" {board[3]} | {board[4]} | {board[5]} ")
+#   print("***|***|***")
+#   print(f" {board[6]} | {board[7]} | {board[8]} ")
+#   print()
+
 #this is defining a computer opponent
 def computer_move(board):
     #first, this will attempt to win, running the game for winning combinations
@@ -62,12 +66,12 @@ def play_mode():
 #asking the current player for a move and is a valid digit
 def player_move(board, current_name, symbol):
     while True:
-        choice = input(f"{current_name}, please choose a square (1-9) or enter 0 to reset: ")
+        choice = input(f"{current_name}, please choose a square (1-9) or enter 42 to reset: ")
         if not choice.isdigit():
             print("Please enter a number.")
             continue
         choice = int(choice)
-        if choice == 0:
+        if choice == 42:
             reset_game(board)
             return "reset"
         elif choice < 1 or choice > 9:
@@ -85,6 +89,7 @@ def check_winner(board, symbol):
         if all(board[i] == symbol for i in pattern):
             return True
     return False
+
 #function to check if there is a tie, only if the board is full
 def is_tie(board):
     if check_winner(board, O) or check_winner(board, X):
@@ -94,7 +99,7 @@ def is_tie(board):
 def switch_player(player1, current_name):
     if current_name == player1:
         return player2
-    else:
+    else
         return player1
 #to ask player1 if they want another game
 def replay_game():
@@ -112,9 +117,10 @@ def replay_game():
 #reset the game to play from scratch
 def reset_game(board):
     board[:] = [str(i) for i in range(1, 10)]
-    print("Resetting board")
+    #print("Resetting board")
     if player2 == "Marvin":
         print("I've reset the board. I'd say I'm sorry, but I'm not. I'm just incredibly bored.")
+    game_ui.randomize_background()
     time.sleep(3)
 
 #defining how the game if played using the above functions as a function
@@ -184,7 +190,12 @@ marvin_lose = ["You won. I'm never happy.", "A million ideas, all pointing to de
 marvin_moves = ["Thinking... tedious.", "Calculated your next 10 disappointments.", "Humiliating for a brain my size.", "Pointless organic life.", "Pardon me for breathing."]
 
 #playing a game and ask for replay
+
+if __name__ == "__main__":
+    start_ui()
+
 while True:
+
     play_game()
     # printing the score
     print(f"The current score is {player1_score} and {player2_score} with {draws} ties.")
