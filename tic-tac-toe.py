@@ -53,17 +53,23 @@ marvin_42 = [
 #default settings
 name = input("Hi Player 1, please enter your name: ")
 X, O = "❌", "⭕"
-player1_score = 41
+player1_score = 0
 player2_score = 0
 draws = 0
 player2 = None
 
-#Create the board logic
 def create_board():
+    """
+    creates the board
+    """
     return [str(i) for i in range(1, 10)]
 
-#Visualizing the board in the terminal
+
 def print_board(board):
+    """
+    prints the board visually in the terminal
+    :return:
+    """
     print("\n")
     print(f" {board[0]} | {board[1]} | {board[2]} ")
     print("---|---|---")
@@ -72,8 +78,14 @@ def print_board(board):
     print(f" {board[6]} | {board[7]} | {board[8]} ")
     print("\n")
 
-#Marvin (computer) moves
 def computer_move(board):
+    """
+    Provides the various moves for the computer (Marvin)
+    This includes, attempting to win and blocking the human player
+    It provides a random move if no block/win
+    :param board:
+    :return:
+    """
     #Attempt to win
     for i in range(9):
         if board[i] not in [X, O]:
@@ -95,8 +107,13 @@ def computer_move(board):
     if free:
         board[random.choice(free)] = O
 
-#Aelecting the mode of play v human or Marvin and who moves first
 def play_mode():
+    """
+    This allows player 1 to choose if they play the a human or the computer
+    It also allows the person to choose to go first and second
+    The player who goes first, is always X
+    :return:
+    """
     while True:
         choice = input(f"Hi {name}, do you want to play against another Inhabitant of Sector 2801  (1) or me 🤖 (2)? ")
         if choice not in ["1", "2"]:
@@ -108,8 +125,16 @@ def play_mode():
             order = input("Please enter 1 or 2: ")
         return choice, order
 
-#Define the players move, reset, and validating the move is not taken
 def player_move(board, current_name, symbol):
+    """
+    Allows the player to move
+    Checks the board to make sure a square is free
+    Allows the player to reset the current game but not the scores
+    :param board:
+    :param current_name:
+    :param symbol:
+    :return:
+    """
     while True:
         choice = input(f"{current_name}, please choose a square (1-9) or 42 to reset: ")
         if not choice.isdigit():
@@ -128,26 +153,49 @@ def player_move(board, current_name, symbol):
         board[choice - 1] = symbol
         break
 
-#Defining the win patterns and checking for a match
 def check_winner(board, symbol):
+    """
+    This is defining the win patterns as a tuple of lists
+    It checks the patterns on the board and compares them
+    If there is a match, there is a winner (TRUE)
+    :param board:
+    :param symbol:
+    :return:
+    """
     win_patterns = ([0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6])
     for pattern in win_patterns:
         if all(board[i] == symbol for i in pattern):
             return True
     return False
 
-#If nothing is in the win, checking if there are valid moves, and if not, calling a drawe
+
 def is_tie(board):
+    """
+    If there is no winner, continue playing
+    One all the squares are full, it declares a tie
+    :param board:
+    :return:
+    """
     if check_winner(board, O) or check_winner(board, X):
         return False
     return all(cell in [X, O] for cell in board)
 
-#Ensring players are switched
 def switch_player(p1, p2, current_name):
+    """
+    Swaps player1 and player2=
+    :param p1:
+    :param p2:
+    :param current_name:
+    :return:
+    """
     return p2 if current_name == p1 else p1
 
-#Offers a replay, then chooses starts again
 def replay_game():
+    """
+    Asks player 1 if they wants another game
+    If so, then there will be another game
+    :return:
+    """
     yes_options = ["y", "yes"]
     no_options = ["n", "no"]
     while True:
@@ -157,15 +205,24 @@ def replay_game():
         elif choice in no_options:
             return False
 
-#Resets the existing board without affecting the scores
 def reset_game(board):
+    """
+    Allows the player to reset the game
+    This is called above by typing 42 during player move
+    :param board:
+    :return:
+    """
     board[:] = [str(i) for i in range(1, 10)]
     if player2 == "Marvin 🤖":
         print("I've reset the board. I'd say I'm sorry, but I'm not. I'm just incredibly bored.")
     time.sleep(1)
 
-#Define the game, players, and board
 def play_game():
+    """
+    Defines the variables and players for the game
+    Confirms the moves using the above functions and variables
+    :return:
+    """
     global player1_score, player2_score, draws, player2
     board = create_board()
     mode, order = play_mode()
@@ -212,15 +269,16 @@ def play_game():
         current_icon = O if current_icon == X else X
 
 #Plays a game then asks for replay
+#If no replay, it will display the score
+#if one of the scores (including draw) reaches 42, there is a surprise
 while True:
     play_game()
-    #Prints the score
     print(f"The current score is {player1_score} and {player2_score} with {draws} ties.")
     if 42 in (player1_score, player2_score, draws):
         print("\n🐟🐟🐟")
         print(f"{random.choice(marvin_42)}")
         print("Good Bye and thanks for all the fish!")
-        print("🐬🐬🐬\n")    #If replay_game returns False, stop the loop and print the score with an appropriate quote bas
+        print("🐬🐬🐬\n")
     if not replay_game():
         if player1_score == player2_score:
             print(f"🤖{random.choice(marvin_draws)}")
