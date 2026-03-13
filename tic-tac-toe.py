@@ -68,7 +68,6 @@ def create_board():
 def print_board(board):
     """
     prints the board visually in the terminal
-    :return:
     """
     print("\n")
     print(f" {board[0]} | {board[1]} | {board[2]} ")
@@ -111,7 +110,7 @@ def play_mode():
     """
     This allows player 1 to choose if they play the a human or the computer
     It also allows the person to choose to go first and second
-    The player who goes first, is always X
+    The player who goes first, is always X, and the player who goes second is always O
     :return:
     """
     while True:
@@ -129,7 +128,7 @@ def player_move(board, current_name, symbol):
     """
     Allows the player to move
     Checks the board to make sure a square is free
-    Allows the player to reset the current game but not the scores
+    Allows the player to reset the current game by entering 42 but not the scores
     :param board:
     :param current_name:
     :param symbol:
@@ -155,9 +154,8 @@ def player_move(board, current_name, symbol):
 
 def check_winner(board, symbol):
     """
-    This is defining the win patterns as a tuple of lists
-    It checks the patterns on the board and compares them
-    If there is a match, there is a winner (TRUE)
+    Checks all winning combinations on the board for a given symbol
+    If all positions in any winning pattern match the symbol, returns True
     :param board:
     :param symbol:
     :return:
@@ -171,8 +169,8 @@ def check_winner(board, symbol):
 
 def is_tie(board):
     """
-    If there is no winner, continue playing
-    One all the squares are full, it declares a tie
+    Returns True if the board is full and there is no winner
+    Checks for an existing winner first, and if none, checks if all squares are occupied
     :param board:
     :return:
     """
@@ -182,7 +180,7 @@ def is_tie(board):
 
 def switch_player(p1, p2, current_name):
     """
-    Swaps player1 and player2=
+    Swaps player1 and player2
     :param p1:
     :param p2:
     :param current_name:
@@ -221,6 +219,7 @@ def play_game():
     """
     Defines the variables and players for the game
     Confirms the moves using the above functions and variables
+    Returns quotes as needed and defines the reset logic (42)
     :return:
     """
     global player1_score, player2_score, draws, player2
